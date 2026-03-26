@@ -1,0 +1,62 @@
+services:
+  # フロントエンド (Next.js 14)
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: moments-frontend
+    ports:
+      - '3080:3000'
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    networks:
+      - moments-network
+
+  # Nginx (Webサーバー) を追加
+  nginx:
+    image: nginx:alpine
+    container_name: moments-nginx
+    ports:
+      - '8000:80' # ブラウザからは 8000番でアクセス
+    volumes:
+      - ./backend:/var/www
+      - ./backend/docker/nginx/default.conf:/etc/nginx/conf.d/default.conf
+    networks:
+      - moments-network
+    depends_on:
+      - backend
+
+  # バックエンド (Laravel 11 / PHP 8.3)
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: moments-backend
+    volumes:
+      - ./backend:/var/www
+    networks:
+      - moments-network
+    depends_on:
+      - db
+
+  # データベース (MySQL 8.0)
+  db:
+    image: mysql:8.0
+    container_name: moments-db
+    ports:
+      - '3306:3306'
+    environment:
+      MYSQL_DATABASE: moments_db
+      MYSQL_ROOT_PASSWORD: password
+    volumes:
+      - db-data:/var/lib/mysql
+    networks:
+      - moments-network
+
+networks:
+  moments-network:
+    driver: bridge
+
+volumes:
+  db-data:

@@ -1,0 +1,10 @@
+# 各ディレクトリの無視設定を読み込む
+frontend/node_modules/
+frontend/.next/
+backend/vendor/
+backend/storage/*.key
+backend/.env
+
+# ルートの機密情報
+.env
+docker-compose.override.yml
