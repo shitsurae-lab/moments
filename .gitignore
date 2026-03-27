@@ -8,3 +8,7 @@ backend/.env
 # ルートの機密情報
 .env
 docker-compose.override.yml
+
+# OS generated files
+.DS_Store
+Thumbs.db
