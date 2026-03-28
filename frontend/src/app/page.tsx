@@ -1,3 +1,4 @@
+import { searchPhotos } from '@/lib/unsplash';
 import Image from 'next/image';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -11,7 +12,11 @@ import {
 } from '@/components/ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 
-export default function Home() {
+export default async function Home() {
+  const photos = await searchPhotos('nature', 1, 5);
+  // const [photo, setPhoto] = useState<UnsplashPhoto | null>(null); から、useEffectを使用してコンポーネントがマウントされたときに写真を取得することもできます。
+  //useEffect(() => {const[photo, setPhoto] = useState<UnsplashPhoto | null>(null); const fetchPhoto = async () => {const photos = await searchPhotos('nature', 1, 5); if (photos.length > 0) {setPhoto(photos[0]);}}; fetchPhoto();}, []);
+  console.log('Fetched photos:', photos);
   return (
     <>
       <main className='flex flex-col items-center justify-center'>
