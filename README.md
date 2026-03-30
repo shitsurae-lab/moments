@@ -59,6 +59,36 @@ docker compose up -d
 
 ---
 
+## 🚀 Deployment (Vercel)
+
+本プロジェクトはVercelにデプロイされています。リポジトリがモノレポ構造（frontend/ とbackend/ が混在）のため、以下の設定を適用しています。
+
+### 構成設定
+
+- **Root Directory**: `frontend`
+  - VercelのProject Settingsにて指定。これによりfrontend/ 内のpackage.jsonがビルド対象となります。
+- **Framework Preset**: Next.js
+  - next.config.tsに基づき、自動的にビルドが最適化されます。
+- **Environment Variables**:
+  - NEXT_PUBLIC_UNSPLASH_ACCESS_KEY: Unsplash APIから画像を取得するためのアクセストークン。
+- **Custom Domain**: [https://moments.vector-n.net/](https://moments.vector-n.net/)
+  - VercelのDomains設定にて独自ドメインを紐付け済み。
+
+### 環境変数 (Environment Variables)
+
+Vercelのプロジェクト設定にて以下の変数を設定する必要があります：
+
+- `NEXT_PUBLIC_UNSPLASH_ACCESS_KEY`: Unsplash APIのアクセキー
+
+### デプロイの手順
+
+1. Vercelでリポジトリをインポート。
+2. `Settings > General` で **Root Directory** を `frontend` に指定。
+3. `Settings > Environment Variables` で上記の環境変数を追加。
+4. 再デプロイを実行。
+
+---
+
 ## プレビュー
 
 - Frontend: http://localhost:3080
