@@ -1,5 +1,6 @@
 'use client';
 import { useState } from 'react';
+
 import Image from 'next/image';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -19,13 +20,15 @@ import { usePhotoGallery } from '@/components/PhotoGallery';
 import { PhotoSkeleton } from '@/components/PhotoSkelton';
 
 export default function Home() {
-  const [inputText, setInputText] = useState(''); //入力テキストを管理する状態変数
-  const [searchQuery, setSearchQuery] = useState('latest'); //検索クエリを管理する状態変数
+  // 🌻 状態変数
+  //1. 入力テキストを管理する状態変数
+  const [inputText, setInputText] = useState('');
+  //2. 検索クエリを管理する状態変数
+  const [searchQuery, setSearchQuery] = useState('latest');
 
   //機能. カスタムフックを使用して写真を取得する
-  const { photos, loading, error } = usePhotoGallery({
-    query: 'latest', //検索クエリ
-    page: 1, //一回の通信で取得するページ番号
+  const { photos, loading, error, ref } = usePhotoGallery({
+    query: searchQuery, //検索クエリ
     perPage: 8,
   });
 
@@ -79,6 +82,9 @@ export default function Home() {
             ))}
           </ul>
         )}
+        <div ref={ref} className='h-10 flex justify-center'>
+          {loading && <PhotoSkeleton />}
+        </div>
       </main>
     </>
   );
