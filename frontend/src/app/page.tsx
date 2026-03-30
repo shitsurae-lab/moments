@@ -1,4 +1,5 @@
-import { searchPhotos } from '@/lib/unsplash';
+'use client';
+import { useState } from 'react';
 import Image from 'next/image';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -10,38 +11,74 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
+
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 
-export default async function Home() {
-  const photos = await searchPhotos('nature', 1, 5);
-  // const [photo, setPhoto] = useState<UnsplashPhoto | null>(null); から、useEffectを使用してコンポーネントがマウントされたときに写真を取得することもできます。
-  //useEffect(() => {const[photo, setPhoto] = useState<UnsplashPhoto | null>(null); const fetchPhoto = async () => {const photos = await searchPhotos('nature', 1, 5); if (photos.length > 0) {setPhoto(photos[0]);}}; fetchPhoto();}, []);
-  console.log('Fetched photos:', photos);
+//機能1. カスタムフックを使用して写真を取得する
+import { usePhotoGallery } from '@/components/PhotoGallery';
+import { PhotoSkeleton } from '@/components/PhotoSkelton';
+
+export default function Home() {
+  const [inputText, setInputText] = useState(''); //入力テキストを管理する状態変数
+  const [searchQuery, setSearchQuery] = useState('latest'); //検索クエリを管理する状態変数
+
+  //機能. カスタムフックを使用して写真を取得する
+  const { photos, loading, error } = usePhotoGallery({
+    query: 'latest', //検索クエリ
+    page: 1, //一回の通信で取得するページ番号
+    perPage: 8,
+  });
+
   return (
     <>
       <main className='flex flex-col items-center justify-center'>
         <h1 className='text-3xl font-bold'>Hello world!</h1>
-        <Card className='relative mx-auto w-full max-w-sm pt-0'>
-          <div className='absolute inset-0 z-30 aspect-video bg-black/35' />
-          <img
-            src='https://avatar.vercel.sh/shadcn1'
-            alt='Event cover'
-            className='relative z-20 aspect-video w-full object-cover brightness-60 grayscale dark:brightness-40'
-          />
-          <CardHeader>
-            <CardAction>
-              <Badge variant='secondary'>Featured</Badge>
-            </CardAction>
-            <CardTitle>Design systems meetup</CardTitle>
-            <CardDescription>
-              A practical talk on component APIs, accessibility, and shipping
-              faster.
-            </CardDescription>
-          </CardHeader>
-          <CardFooter>
-            <Button className='w-full'>View Event</Button>
-          </CardFooter>
-        </Card>
+        {loading && (
+          <ul className='grid gap-4 w-full max-w-sm'>
+            {Array.from({ length: 6 }).map((_, i) => (
+              <li key={i}>
+                <PhotoSkeleton />
+              </li>
+            ))}
+          </ul>
+        )}
+        {error && <p>Error: {error}</p>}
+        {!loading && !error && photos.length === 0 && (
+          <p>投稿がまだありません</p>
+        )}
+        {!loading && !error && photos.length > 0 && (
+          <ul className='grid gap-4 w-full max-w-sm'>
+            {photos.map((photo) => (
+              <li key={photo.id}>
+                <Card className='relative mx-auto w-full max-w-sm pt-0'>
+                  <div className='relative aspect-4/3 w-full'>
+                    <Image
+                      src={photo.urls.small}
+                      alt={photo.alt_description || 'Unsplash Photo'}
+                      fill
+                      className='object-cover rounded-t-2xl'
+                      sizes='(max-width: 768px) 100vw, 400px'
+                    />
+                  </div>
+                  <CardHeader>
+                    <CardAction>
+                      <Badge variant='secondary'>Featured</Badge>
+                    </CardAction>
+                    <CardTitle>Design systems meetup</CardTitle>
+                    <CardDescription>
+                      {photo.description || photo.alt_description}
+                    </CardDescription>
+                  </CardHeader>
+                  <CardFooter>
+                    <Button className='w-full'>View Event</Button>
+                  </CardFooter>
+                </Card>
+                {/* <p>{photo.description || photo.alt_description}</p>
+              <p>By: {photo.user.name}</p> */}
+              </li>
+            ))}
+          </ul>
+        )}
       </main>
     </>
   );
