@@ -1,9 +1,7 @@
 'use client';
-import { useState } from 'react';
 import { useSearchParams } from 'next/navigation';
 import Image from 'next/image';
 import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
 import {
   Card,
   CardAction,
@@ -38,93 +36,95 @@ export default function Home() {
   return (
     <>
       <main className='flex flex-col items-center justify-center'>
-        {loading && (
-          <ul className='grid gap-4 w-full max-w-sm'>
-            {Array.from({ length: 6 }).map((_, i) => (
-              <li key={i}>
-                <PhotoSkeleton />
-              </li>
-            ))}
-          </ul>
-        )}
-        {error && <p>Error: {error}</p>}
-        {!loading && !error && photos.length === 0 && (
-          <p>投稿がまだありません</p>
-        )}
-        {!loading && !error && photos.length > 0 && (
-          <ul className='grid gap-10 w-full max-w-sm'>
-            {photos.map((photo) => (
-              <li key={photo.id}>
-                <div className='mb-2 flex justify-between items-center'>
-                  <a
-                    href={`${photo.user.links.html}?${UTM}`}
-                    target='_blank'
-                    rel='noopener noreferrer'
-                    className='flex justify -between gap-2'
-                  >
-                    <Avatar>
-                      <AvatarImage
-                        src={photo.user.profile_image.small}
-                        alt={photo.user.name}
-                      />
-                      <AvatarFallback>{photo.user.name[0]}</AvatarFallback>
-                    </Avatar>
-                    <span className='text-sm'>{photo.user.name}</span>
-                  </a>
-                  <span className='text-xs text-muted-foreground'>
-                    on{' '}
+        <div className='w-full max-w-sm mb-10 py-5'>
+          {loading && (
+            <ul className='grid gap-4 w-full max-w-sm'>
+              {Array.from({ length: 6 }).map((_, i) => (
+                <li key={i}>
+                  <PhotoSkeleton />
+                </li>
+              ))}
+            </ul>
+          )}
+          {error && <p>Error: {error}</p>}
+          {!loading && !error && photos.length === 0 && (
+            <p>投稿がまだありません</p>
+          )}
+          {!loading && !error && photos.length > 0 && (
+            <ul className='grid gap-10 w-full max-w-sm'>
+              {photos.map((photo) => (
+                <li key={photo.id}>
+                  <div className='mb-2 flex justify-between items-center'>
                     <a
-                      href={`https://unsplash.com/?${UTM}`}
+                      href={`${photo.user.links.html}?${UTM}`}
                       target='_blank'
                       rel='noopener noreferrer'
-                      className='underline hover:text-foreground'
+                      className='flex justify -between gap-2'
                     >
-                      {(photo.tags?.[0] && photo.tags[0].title) || 'Unsplash'}
+                      <Avatar>
+                        <AvatarImage
+                          src={photo.user.profile_image.small}
+                          alt={photo.user.name}
+                        />
+                        <AvatarFallback>{photo.user.name[0]}</AvatarFallback>
+                      </Avatar>
+                      <span className='text-sm'>{photo.user.name}</span>
                     </a>
-                  </span>
-                </div>
+                    <span className='text-xs text-muted-foreground'>
+                      on{' '}
+                      <a
+                        href={`https://unsplash.com/?${UTM}`}
+                        target='_blank'
+                        rel='noopener noreferrer'
+                        className='underline hover:text-foreground'
+                      >
+                        {(photo.tags?.[0] && photo.tags[0].title) || 'Unsplash'}
+                      </a>
+                    </span>
+                  </div>
 
-                <Card className='relative mx-auto w-full max-w-sm pt-0'>
-                  <a
-                    href={photo.urls.full + '?' + UTM}
-                    target='_blank'
-                    rel='noopener noreferrer'
-                  >
-                    <div className='relative aspect-4/3 w-full'>
-                      <Image
-                        src={photo.urls.small}
-                        alt={photo.alt_description || 'Unsplash Photo'}
-                        fill
-                        className='object-cover'
-                        sizes='(max-width: 768px) 100vw, 400px'
-                      />
-                    </div>
-                  </a>
-                  <CardHeader className='flex flex-col items-start gap-5'>
-                    <CardTitle className='capitalize'>
-                      {photo.alt_description}
-                    </CardTitle>
-                    <CardDescription>
-                      {photo.description || photo.alt_description}
-                    </CardDescription>
-                    <CardAction>
-                      <Badge variant='secondary' className='uppercase'>
-                        unsplash
-                      </Badge>
-                    </CardAction>
-                  </CardHeader>
-                  <CardFooter className='justify-end'>
-                    <LikeButton />
-                  </CardFooter>
-                </Card>
-                {/* <p>{photo.description || photo.alt_description}</p>
+                  <Card className='relative mx-auto w-full max-w-sm pt-0'>
+                    <a
+                      href={photo.urls.full + '?' + UTM}
+                      target='_blank'
+                      rel='noopener noreferrer'
+                    >
+                      <div className='relative aspect-4/3 w-full'>
+                        <Image
+                          src={photo.urls.small}
+                          alt={photo.alt_description || 'Unsplash Photo'}
+                          fill
+                          className='object-cover'
+                          sizes='(max-width: 768px) 100vw, 400px'
+                        />
+                      </div>
+                    </a>
+                    <CardHeader className='flex flex-col items-start gap-5'>
+                      <CardTitle className='capitalize'>
+                        {photo.alt_description}
+                      </CardTitle>
+                      <CardDescription>
+                        {photo.description || photo.alt_description}
+                      </CardDescription>
+                      <CardAction>
+                        <Badge variant='secondary' className='uppercase'>
+                          unsplash
+                        </Badge>
+                      </CardAction>
+                    </CardHeader>
+                    <CardFooter className='justify-end'>
+                      <LikeButton />
+                    </CardFooter>
+                  </Card>
+                  {/* <p>{photo.description || photo.alt_description}</p>
               <p>By: {photo.user.name}</p> */}
-              </li>
-            ))}
-          </ul>
-        )}
-        <div ref={ref} className='h-10 flex justify-center'>
-          {loading && <PhotoSkeleton />}
+                </li>
+              ))}
+            </ul>
+          )}
+          <div ref={ref} className='h-10 flex justify-center'>
+            {loading && <PhotoSkeleton />}
+          </div>
         </div>
       </main>
     </>
