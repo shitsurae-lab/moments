@@ -2,6 +2,8 @@ const ACCESS_KEY = process.env.NEXT_PUBLIC_UNSPLASH_ACCESS_KEY;
 
 export interface UnsplashPhoto {
   id: string;
+  slug: string;
+  tags?: { title: string }[];
   description: string | null;
   alt_description: string | null;
   urls: {
@@ -15,6 +17,10 @@ export interface UnsplashPhoto {
     name: string;
     links: {
       html: string;
+    };
+    profile_image: {
+      small: string;
+      medium: string;
     };
   };
 }
