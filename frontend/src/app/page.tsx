@@ -20,6 +20,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { usePhotoGallery } from '@/components/PhotoGallery';
 
 import { PhotoSkeleton } from '@/components/PhotoSkelton';
+import { LikeButton } from '@/components/LikeButton';
 
 export default function Home() {
   // 🌹URLの検索パラメータからクエリを取得する。クエリがない場合は'popular'をデフォルト値として使用する
@@ -112,8 +113,8 @@ export default function Home() {
                       </Badge>
                     </CardAction>
                   </CardHeader>
-                  <CardFooter>
-                    <Button className='w-full'>View Event</Button>
+                  <CardFooter className='justify-end'>
+                    <LikeButton />
                   </CardFooter>
                 </Card>
                 {/* <p>{photo.description || photo.alt_description}</p>
