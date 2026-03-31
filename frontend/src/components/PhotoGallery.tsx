@@ -24,6 +24,13 @@ export const usePhotoGallery = ({
   const { ref, inView } = useInView({
     rootMargin: '0px 0px 200px 0px', //要素が画面に入る前に200pxの余裕を持たせる
   });
+
+  //検索クエリが変更されたときにページ番号をリセットし、写真の配列を空にする
+  useEffect(() => {
+    setPage(1);
+    setPhotos([]);
+  }, [query]);
+
   //写真を取得する副作用を管理するためのuseEffectフック
   useEffect(() => {
     const fetchPhotos = async () => {

@@ -1,6 +1,6 @@
 'use client';
 import { useState } from 'react';
-
+import { useSearchParams } from 'next/navigation';
 import Image from 'next/image';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -14,28 +14,34 @@ import {
 } from '@/components/ui/card';
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-
+//🌻 機能
 //機能1. カスタムフックを使用して写真を取得する
 import { usePhotoGallery } from '@/components/PhotoGallery';
+//
 import { PhotoSkeleton } from '@/components/PhotoSkelton';
 
 export default function Home() {
   // 🌻 状態変数
   //1. 入力テキストを管理する状態変数
-  const [inputText, setInputText] = useState('');
+  const [text, setText] = useState('');
   //2. 検索クエリを管理する状態変数
-  const [searchQuery, setSearchQuery] = useState('latest');
-
+  const [searchQuery, setSearchQuery] = useState('popular');
+  //3. URLの検索パラメータからクエリを取得する。クエリがない場合は'popular'をデフォルト値として使用する
+  const query = useSearchParams().get('query') || 'popular';
   //機能. カスタムフックを使用して写真を取得する
   const { photos, loading, error, ref } = usePhotoGallery({
-    query: searchQuery, //検索クエリ
+    query: query, //検索クエリ
     perPage: 8,
   });
+
+  //検索ボタンを押したときの処理
+  const handleSearch = () => {
+    setSearchQuery(text.trim() || 'popular'); //入力テキストが空の場合は'popular'を検索クエリにセットする
+  };
 
   return (
     <>
       <main className='flex flex-col items-center justify-center'>
-        <h1 className='text-3xl font-bold'>Hello world!</h1>
         {loading && (
           <ul className='grid gap-4 w-full max-w-sm'>
             {Array.from({ length: 6 }).map((_, i) => (
@@ -59,7 +65,7 @@ export default function Home() {
                       src={photo.urls.small}
                       alt={photo.alt_description || 'Unsplash Photo'}
                       fill
-                      className='object-cover rounded-t-2xl'
+                      className='object-cover'
                       sizes='(max-width: 768px) 100vw, 400px'
                     />
                   </div>
