@@ -27,7 +27,7 @@ export const PostForm = ({ onSuccess }: PostFormProps) => {
       //
       const apiUrl = process.env.NEXT_PUBLIC_API_URL;
       //バックエンドのAPIエンドポイントにPOSTリクエストを送る
-      const response = await fetch(`${apiUrl}/posts`, {
+      const response = await fetch(`${apiUrl}/api/posts`, {
         method: 'POST',
         body: formData,
       });
