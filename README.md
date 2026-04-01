@@ -179,8 +179,64 @@ Route::post('/posts', [PostController::class, 'store']);
 3. `Settings > Environment Variables` で上記の環境変数を追加。
 4. 再デプロイを実行。
 
+---
+
+## 🚀 デプロイ (Railway / Backend)
+
+バックエンド（Laravel + MySQL）はRailwayにデプロイしています。
+
+### 構成
+
+| サービス | 内容                                  |
+| -------- | ------------------------------------- |
+| Laravel  | GitHub リポジトリと連携し自動デプロイ |
+| MySQL    | Railway 内の MySQL サービスを使用     |
+
+### Railway 用ファイル構成
+
+ローカル開発環境（Docker Compose + Nginxコンテナー分離）とは異なり、Railwayでは1コンテナーにNginx + php-fpmを同梱する構成にしています。
+
+| ファイル                    | 役割                                                               |
+| --------------------------- | ------------------------------------------------------------------ |
+| `backend/Dockerfile`        | Nginx 同梱・本番用にリライト（webp 対応含む）                      |
+| `backend/docker/nginx.conf` | Railway 用 Nginx 設定（`fastcgi_pass` を `127.0.0.1:9000` に変更） |
+| `backend/docker/start.sh`   | php-fpm 起動 → migrate → storage:link → Nginx 起動の順次実行       |
+
+> [!NOTE]
+> `backend/docker/nginx/default.conf` はローカル開発用として引き続き使用。Railway 用の `nginx.conf` とは別管理。
+
+### 環境変数 (Railway)
+
+| 変数名         | 用途                                 |
+| -------------- | ------------------------------------ |
+| `APP_KEY`      | Laravel アプリケーションキー         |
+| `APP_URL`      | `https://${{RAILWAY_PUBLIC_DOMAIN}}` |
+| `DB_HOST`      | `${{MySQL.MYSQLHOST}}`               |
+| `DB_PORT`      | `${{MySQL.MYSQLPORT}}`               |
+| `DB_DATABASE`  | `${{MySQL.MYSQLDATABASE}}`           |
+| `DB_USERNAME`  | `${{MySQL.MYSQLUSER}}`               |
+| `DB_PASSWORD`  | `${{MySQL.MYSQLPASSWORD}}`           |
+| `FRONTEND_URL` | Vercel のデプロイ URL（CORS 許可用） |
+| `PORT`         | `80`                                 |
+
+### デプロイ手順
+
+1. Railwayでプロジェクトを作成しMySQLサービスを追加。
+2. GitHubリポジトリを連携し `Root Directory` を `backend` に指定。
+3. 上記の環境変数を設定。
+4. デプロイを実行。
+
+---
+
+## 🔗 本番環境の全体構成
+
+```
+Vercel（Frontend / Next.js）
+    ↓ NEXT_PUBLIC_API_URL
+Railway（Backend / Laravel）
+    ↓ DB接続
+Railway MySQL
+```
+
 > [!WARNING]
-> **デプロイ環境でのバックエンド接続について**
-> 現在、バックエンド（Laravel / MySQL）はローカルの Docker 環境でのみ動作しています。
-> Vercel にデプロイされたフロントエンドから画像をアップロードしようとすると、接続先（localhost）が見つからずエラーになります。
-> 今後、バックエンドを外部サーバーにデプロイし、`NEXT_PUBLIC_API_URL` を更新することで解決予定です。
+> 画像ストレージは現在 Railway のコンテナ内に保存されています。コンテナが再デプロイされるとファイルが消える可能性があるため、今後 Cloudflare R2 等の外部ストレージへの移行を予定しています。
