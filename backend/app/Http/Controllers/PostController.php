@@ -30,19 +30,23 @@ class PostController extends Controller
     {
         //1. バリデーション
         $request->validate([
-            'image' => 'required|image|mimes:jpeg,png,jpg,gif,webp|max:2048', //画像は必須で、画像ファイルであること、最大2MB
-            'caption' => 'nullable|string|max:255', //説明文は任意で、文字列で最大255文字
-            'tags' => 'nullable|string', //タグは任意で、文字列で最大255文字
+            'image' => 'required|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
+            'title' => 'nullable|string|max:255',
+            'caption' => 'nullable|string|max:255',
+            'tags' => 'nullable|string',
         ]);
 
-        //2. 画像の保存(第一引数は保存するファイル、第二引数は保存先のディレクトリ、第三引数はストレージのディスク)
-        $path = $request->file('image')->store('posts', 'public');
+        // 2. 画像をR2に保存
+        $path = $request->file('image')->store('posts', 's3');
 
         //3. データベースに保存
         $post = \App\Models\Post::create([
             'image_path' => $path,
+            'title' => $request->title,
             'caption' => $request->caption,
             'tags' => $request->tags,
+            'user_name' => 'anonymous',
+            'user_avatar_url' => null,
         ]);
         //4. Next.js（フロント端）に「成功したよ！」と返事をする
         return response()->json([
