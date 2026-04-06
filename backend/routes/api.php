@@ -11,3 +11,6 @@ Route::get('/user', function (Request $request) {
 
 //2. これを追記（POSTリクエストを受け取るルートを定義する）
 Route::post('/posts', [PostController::class, 'store']);
+
+//3. これを追記（GETリクエストを受け取るルートを定義する）
+Route::get('/posts', [PostController::class, 'index']);
