@@ -12,7 +12,9 @@ class PostController extends Controller
      */
     public function index()
     {
-        //
+        //投稿を新しい順に取得して、15件ずつページネーションする
+        $posts = Post::orderBy('created_at', 'desc')->simplePaginate(15);
+        return response()->json($posts);
     }
 
     /**
