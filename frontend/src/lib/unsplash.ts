@@ -1,8 +1,9 @@
+//Unsplash APIの生データの型
 const ACCESS_KEY = process.env.NEXT_PUBLIC_UNSPLASH_ACCESS_KEY;
 
 export interface UnsplashPhoto {
   id: string;
-  slug: string;
+  created_at: string;
   tags?: { title: string }[];
   description: string | null;
   alt_description: string | null;

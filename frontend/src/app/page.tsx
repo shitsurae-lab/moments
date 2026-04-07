@@ -12,6 +12,7 @@ import {
 } from '@/components/ui/card';
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { UnifiedPost } from '@/lib/UnifiedPost';
 
 //🌻 機能
 //機能1. カスタムフックを使用して写真を取得する
@@ -32,7 +33,18 @@ export default function Home() {
   //UTMパラメータを定数として定義する。これを使用して、Unsplashの写真へのリンクにトラッキング情報を追加することで、どの写真がどれだけクリックされたかを分析できるようにする
   const UTM =
     'utm_source=portfolio&utm_medium=referral&utm_campaign=moments_app';
-
+  const unsplashPosts: UnifiedPost[] = photos.map((photo) => ({
+    id: photo.id,
+    source: 'unsplash' as const,
+    imageUrl: photo.urls.small,
+    authorName: photo.user.name,
+    avatarIcon: photo.user.profile_image.small,
+    avatarLink: photo.user.links.html,
+    tag: photo.tags?.[0]?.title,
+    title: photo.alt_description ?? '',
+    description: photo.description,
+    createdAt: photo.created_at,
+  }));
   return (
     <>
       <main className='flex flex-col items-center justify-center'>
@@ -52,23 +64,23 @@ export default function Home() {
           )}
           {!loading && !error && photos.length > 0 && (
             <ul className='grid gap-10 w-full max-w-sm'>
-              {photos.map((photo) => (
+              {unsplashPosts.map((photo) => (
                 <li key={photo.id}>
                   <div className='mb-2 flex justify-between items-center'>
                     <a
-                      href={`${photo.user.links.html}?${UTM}`}
+                      href={`${photo.avatarLink}?${UTM}`}
                       target='_blank'
                       rel='noopener noreferrer'
                       className='flex justify -between gap-2'
                     >
                       <Avatar>
                         <AvatarImage
-                          src={photo.user.profile_image.small}
-                          alt={photo.user.name}
+                          src={photo.avatarIcon}
+                          alt={photo.authorName}
                         />
-                        <AvatarFallback>{photo.user.name[0]}</AvatarFallback>
+                        <AvatarFallback>{photo.authorName}</AvatarFallback>
                       </Avatar>
-                      <span className='text-sm'>{photo.user.name}</span>
+                      <span className='text-sm'>{photo.authorName}</span>
                     </a>
                     <span className='text-xs text-muted-foreground'>
                       on{' '}
@@ -78,21 +90,21 @@ export default function Home() {
                         rel='noopener noreferrer'
                         className='underline hover:text-foreground'
                       >
-                        {(photo.tags?.[0] && photo.tags[0].title) || 'Unsplash'}
+                        {photo.tag || 'Unsplash'}
                       </a>
                     </span>
                   </div>
 
                   <Card className='relative mx-auto w-full max-w-sm pt-0'>
                     <a
-                      href={photo.urls.full + '?' + UTM}
+                      href={photo.imageUrl + '?' + UTM}
                       target='_blank'
                       rel='noopener noreferrer'
                     >
                       <div className='relative aspect-4/3 w-full'>
                         <Image
-                          src={photo.urls.small}
-                          alt={photo.alt_description || 'Unsplash Photo'}
+                          src={photo.imageUrl}
+                          alt={photo.title || 'Unsplash Photo'}
                           fill
                           className='object-cover'
                           sizes='(max-width: 768px) 100vw, 400px'
@@ -101,10 +113,10 @@ export default function Home() {
                     </a>
                     <CardHeader className='flex flex-col items-start gap-5'>
                       <CardTitle className='capitalize'>
-                        {photo.alt_description}
+                        {photo.title}
                       </CardTitle>
                       <CardDescription>
-                        {photo.description || photo.alt_description}
+                        {photo.description || photo.description}
                       </CardDescription>
                       <CardAction>
                         <Badge variant='secondary' className='uppercase'>
