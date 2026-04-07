@@ -11,9 +11,6 @@ const nextConfig: NextConfig = {
       },
     ],
   },
-  turbopack: {
-    root: '/app',
-  },
 };
 
 export default nextConfig;

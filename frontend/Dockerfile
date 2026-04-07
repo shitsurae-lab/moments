@@ -13,10 +13,13 @@ COPY package*.json ./
 # 2. コンテナの中でインストールを実行（これでLinux用のバイナリが入るよ！）
 RUN npm install
 
-# 3. 残りのソースコードをコピー
+# 3. swcのLinux用バイナリを明示的にインストール
+RUN npm install @next/swc-linux-x64-musl --cpu=x64 --os=linux
+
+# 4. 残りのソースコードをコピー
 COPY . .
 
-# ポートを開放（Next.jsのデフォルトは3000、composeで3080にマッピングしてるね）
+# ポートを開放（Next.jsのデフォルトは3000、composeで3080にマッピング）
 EXPOSE 3000
 
 # 開発用サーバーを起動
