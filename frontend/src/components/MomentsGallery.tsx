@@ -1,0 +1,44 @@
+'use client';
+import { MomentsPost } from '@/lib/MomentsPost';
+import { UnifiedPost } from '@/lib/UnifiedPost';
+import { useEffect, useState } from 'react';
+
+export const useMomentsGallery = () => {
+  const [posts, setPosts] = useState<UnifiedPost[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+
+  useEffect(() => {
+    const fetchPosts = async () => {
+      try {
+        const response = await fetch(`${apiUrl}/api/posts`);
+        if (!response.ok) {
+          throw new Error(`API Error: ${response.statusText}`);
+        }
+        const json = await response.json();
+        const unified = json.data.map((post: MomentsPost) => ({
+          id: String(post.id),
+          imageUrl: post.image_path,
+          title: post.title ?? '',
+          description: post.caption,
+          authorName: 'Guest',
+          avatorIcon: '',
+          createdAt: post.created_at,
+          source: 'moments' as const,
+          postId: post.id,
+        }));
+        setPosts(unified);
+      } catch (error) {
+        setError('投稿の取得に失敗しました。');
+        console.error('Error fetching Moments posts:', error);
+        return [];
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchPosts();
+  }, []);
+
+  return { posts, loading, error };
+};
