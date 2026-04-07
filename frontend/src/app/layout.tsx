@@ -1,24 +1,15 @@
 import type { Metadata } from 'next';
-import { Geist, Geist_Mono, Noto_Sans_JP } from 'next/font/google';
+import localFont from 'next/font/local';
 import './globals.css';
 import { Header } from '@/components/Header';
 import { Suspense } from 'react';
 import { Footer } from '@/components/Footer';
 
-const geistSans = Geist({
-  variable: '--font-geist-sans',
-  subsets: ['latin'],
-});
-
-const geistMono = Geist_Mono({
-  variable: '--font-geist-mono',
-  subsets: ['latin'],
-});
-
-const noto = Noto_Sans_JP({
-  subsets: ['latin'],
+const noto = localFont({
+  src: './fonts/NotoSansJP-VariableFont_wght.woff2',
+  variable: '--font-noto-sans-jp',
   display: 'swap',
-  variable: '--font-noto-sans-jp', // Tailwind v4用
+  weight: '100 900',
 });
 
 export const metadata: Metadata = {
@@ -33,7 +24,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang='ja' className={noto.variable}>
+    <html lang='ja' className={`${noto.variable}`}>
       <body>
         <Suspense fallback={<div>Loading...</div>}>
           <Header />
