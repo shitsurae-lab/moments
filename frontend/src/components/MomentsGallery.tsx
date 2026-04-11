@@ -8,6 +8,7 @@ export const useMomentsGallery = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+  const r2Url = process.env.NEXT_PUBLIC_R2_PUBLIC_URL || '';
 
   useEffect(() => {
     const fetchPosts = async () => {
@@ -19,7 +20,7 @@ export const useMomentsGallery = () => {
         const json = await response.json();
         const unified = json.data.map((post: MomentsPost) => ({
           id: String(post.id),
-          imageUrl: post.image_path,
+          imageUrl: `${r2Url}/${post.image_path}`,
           title: post.title ?? '',
           description: post.caption,
           authorName: 'Guest',
