@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Post;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Request;
 
 class PostController extends Controller
@@ -86,6 +87,17 @@ class PostController extends Controller
      */
     public function destroy(Post $post)
     {
-        //
+        // 1. image_pathがある場合のみR2から画像を削除
+        if ($post->image_path) {
+            Storage::disk('s3')->delete($post->image_path);
+        }
+
+        // 2. DBから投稿を削除
+        $post->delete();
+
+        // 3. フロントに「成功したよ！」と返事をする
+        return response()->json([
+            'message' => 'Post deleted successfully',
+        ], 200);
     }
 }
