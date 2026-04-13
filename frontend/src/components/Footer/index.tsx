@@ -1,7 +1,7 @@
 'use client';
 import { useState } from 'react';
 import { Button } from '../ui/button';
-import { Home, PlusSquare, Plus } from 'lucide-react';
+import { Home, Plus } from 'lucide-react';
 //shadcn/uiから必要なパーツをインポート
 import {
   Dialog,
@@ -10,10 +10,13 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
-//ダイアログの開閉状態を管理するステート
 
 import { PostForm } from '@/components/PostForm';
-export const Footer = () => {
+
+interface FooterProps {
+  refetch: () => void;
+}
+export const Footer = ({ refetch }: FooterProps) => {
   const [isOpen, setIsOpen] = useState(false);
   return (
     <footer className='fixed bottom-0 left-0 z-50 w-full h-16 border-t bg-background/80 backdrop-blur-md px-4'>
@@ -36,13 +39,18 @@ export const Footer = () => {
           </DialogTrigger>
 
           {/* ポップアップの中身 */}
-          <DialogContent className='sm:max-w-[425px]'>
+          <DialogContent className='sm:max-w-[424px]'>
             <DialogHeader>
               <DialogTitle>新規投稿を作成</DialogTitle>
             </DialogHeader>
             {/* フォームを配置 */}
             <div className='py-4'>
-              <PostForm onSuccess={() => setIsOpen(false)} />
+              <PostForm
+                onSuccess={() => {
+                  setIsOpen(false);
+                  refetch();
+                }}
+              />
             </div>
           </DialogContent>
         </Dialog>

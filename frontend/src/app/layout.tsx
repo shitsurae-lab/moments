@@ -3,7 +3,6 @@ import localFont from 'next/font/local';
 import './globals.css';
 import { Header } from '@/components/Header';
 import { Suspense } from 'react';
-import { Footer } from '@/components/Footer';
 
 const noto = localFont({
   src: './fonts/NotoSansJP-VariableFont_wght.woff2',
@@ -30,7 +29,6 @@ export default function RootLayout({
           <Header />
           {children}
         </Suspense>
-        <Footer />
       </body>
     </html>
   );
