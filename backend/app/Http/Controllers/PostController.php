@@ -42,13 +42,14 @@ class PostController extends Controller
         // 2. 画像をR2に保存
         $path = $request->file('image')->store('posts', 's3');
 
-        //3. データベースに保存
-        $post = \App\Models\Post::create([
+        //3. データベースに保存（$request->user() は、ログイン中のユーザー（Userモデル）を指すよ）
+        //posts()->create()の理由: Laravelが 「今ログインしているユーザーのID」を、新しい投稿のuser_idカラムにあてはめる。
+        $post = $request->user()->posts()->create([
             'image_path' => $path,
             'title' => $request->title,
             'caption' => $request->caption,
             'tags' => $request->tags,
-            'user_name' => 'anonymous',
+            'user_name' => $request->user()->name,
             'user_avatar_url' => null,
         ]);
         //4. Next.js（フロント端）に「成功したよ！」と返事をする
@@ -85,17 +86,21 @@ class PostController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Post $post)
+    public function destroy(Request $request, Post $post) //Requestを受け取れるように引数に追加
     {
-        // 1. image_pathがある場合のみR2から画像を削除
+        //1. 投稿者本人以外は削除できない
+        if ($post->use_id !== $request->user()->id) {
+            return response()->json(['message' => 'Unauthorized'], 403);
+        }
+        // 2. image_pathがある場合のみR2から画像を削除
         if ($post->image_path) {
             Storage::disk('s3')->delete($post->image_path);
         }
 
-        // 2. DBから投稿を削除
+        // 3. DBから投稿を削除
         $post->delete();
 
-        // 3. フロントに「成功したよ！」と返事をする
+        // 4. フロントに「成功したよ！」と返事をする
         return response()->json([
             'message' => 'Post deleted successfully',
         ], 200);
