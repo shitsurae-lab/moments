@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('posts', function (Blueprint $table) {
             $table->id();
+            $table->foreignID('user_id')->constrained()->onDelete('cascade'); //どのUserの投稿かを保存する
             $table->string('image_path'); //画像の保存場所
             $table->string('title')->nullable(); //タイトル
             $table->string('caption')->nullable(); //説明文
