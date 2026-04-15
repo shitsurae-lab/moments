@@ -13,10 +13,19 @@ export const PostForm = ({ onSuccess }: PostFormProps) => {
   const [title, setTitle] = useState('');
   const [caption, setCaption] = useState('');
   const [tags, setTags] = useState('');
+  const [imageError, setImageError] = useState('');
+  const [titleError, setTitleError] = useState('');
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (!image) return;
+    if (!image) {
+      setImageError('画像を選択してください');
+      return;
+    }
+    if (!title) {
+      setTitleError('タイトルを入力してください');
+      return;
+    }
 
     const formData = new FormData();
     formData.append('image', image);
@@ -36,7 +45,6 @@ export const PostForm = ({ onSuccess }: PostFormProps) => {
       }
 
       const data = await response.json();
-      console.log('Laravelからの返事', data);
       onSuccess();
     } catch (error) {
       console.error('Error uploading post:', error);
@@ -59,6 +67,7 @@ export const PostForm = ({ onSuccess }: PostFormProps) => {
           accept='image/*'
           onChange={(e) => setImage(e.target.files?.[0] || null)}
         />
+        {imageError && <p>{imageError}</p>}
       </div>
       {/* タイトル */}
       <div className='mt-2'>
@@ -68,6 +77,7 @@ export const PostForm = ({ onSuccess }: PostFormProps) => {
           value={title}
           onChange={(e) => setTitle(e.target.value)}
         />
+        {titleError && <p>{titleError}</p>}
       </div>
       {/* 説明文 */}
       <div className='mt-2'>
@@ -82,9 +92,15 @@ export const PostForm = ({ onSuccess }: PostFormProps) => {
       <div className='mt-2'>
         <label className='block text-sm font-medium mb-1'>タグを入力</label>
         <Input
-          placeholder='タグ'
+          placeholder='横浜, 風景, 夕日'
           value={tags}
-          onChange={(e) => setTags(e.target.value)}
+          onChange={(e) => {
+            const input = e.target.value; // e.target.valueから取得
+            const tagArray = input.split(',');
+            if (tagArray.length <= 3) {
+              setTags(input);
+            }
+          }}
         />
       </div>
       <Button type='submit' className='mt-4'>
