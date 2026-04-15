@@ -15,7 +15,7 @@ return [
     |
     */
 
-    'paths' => ['api/*', 'sanctum/csrf-cookie'],
+    'paths' => ['api/*', 'sanctum/csrf-cookie', 'login', 'logout'],
 
     'allowed_methods' => ['*'],
 
@@ -23,8 +23,6 @@ return [
     'allowed_origins' => [
         env('FRONTEND_URL', 'http://localhost:3080') //環境変数FRONTEND_URLからフロントエンドのURLを取得し、許可する。デフォルトはhttp://localhost:3080
     ],
-
-    'allowed_origins' => ['*'],
 
     'allowed_origins_patterns' => [],
 
@@ -34,6 +32,6 @@ return [
 
     'max_age' => 0,
 
-    'supports_credentials' => false,
+    'supports_credentials' => true,
 
 ];
