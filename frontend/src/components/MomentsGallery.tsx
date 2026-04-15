@@ -17,7 +17,7 @@ export const useMomentsGallery = () => {
         throw new Error(`API Error: ${response.statusText}`);
       }
       const json = await response.json();
-      console.log('fetchPosts実行、取得件数:', json.data.length);
+
       const unified = json.data.map((post: MomentsPost) => ({
         id: String(post.id),
         imageUrl: `${r2Url}/${post.image_path}`,

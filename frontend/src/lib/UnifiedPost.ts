@@ -4,6 +4,7 @@ export interface UnifiedPost {
   avatarIcon: string;
   avatarLink?: string;
   authorName: string;
+  authorId?: number; //Laravel側のuse_idを格納(自分を判定)
   tag?: string | string[]; // タグはオプショナルで、文字列または文字列の配列
   title: string;
   description: string | null;

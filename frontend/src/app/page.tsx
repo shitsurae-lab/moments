@@ -176,9 +176,25 @@ export default function Page() {
                             unsplash
                           </Badge>
                         ) : (
-                          <Badge variant='secondary' className='uppercase'>
-                            {post.tag || 'moments'}
-                          </Badge>
+                          <div className='flex flex-wrap gap-1'>
+                            {post.tag ? (
+                              String(post.tag)
+                                .split(',')
+                                .map((tag, i) => (
+                                  <Badge
+                                    key={i}
+                                    variant='secondary'
+                                    className='uppercase'
+                                  >
+                                    {tag.trim()}
+                                  </Badge>
+                                ))
+                            ) : (
+                              <Badge variant='secondary' className='uppercase'>
+                                moments
+                              </Badge>
+                            )}
+                          </div>
                         )}
                       </CardAction>
                     </CardHeader>

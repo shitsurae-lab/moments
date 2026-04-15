@@ -31,7 +31,7 @@ export const DeletePostButton = ({ postId, onDelete }: props) => {
 
     const data = await res.json();
     console.log('response:', data);
-    console.log('削除完了、refetch呼び出し');
+
     // ✨️END デバッグ強化版
 
     onDelete();
