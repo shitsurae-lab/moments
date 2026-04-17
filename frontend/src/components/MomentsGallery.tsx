@@ -7,12 +7,12 @@ export const useMomentsGallery = () => {
   const [posts, setPosts] = useState<UnifiedPost[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+  // const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
   const r2Url = process.env.NEXT_PUBLIC_R2_PUBLIC_URL || '';
   // useEffectの外にfetchPostsとして定義: （変更理由）外から呼べる
   const fetchPosts = async () => {
     try {
-      const response = await fetch(`${apiUrl}/api/posts`);
+      const response = await fetch('/api/posts');
       if (!response.ok) {
         throw new Error(`API Error: ${response.statusText}`);
       }
