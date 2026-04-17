@@ -1,4 +1,5 @@
 'use client';
+import { motion } from 'framer-motion';
 import { useSearchParams } from 'next/navigation';
 import Image from 'next/image';
 import { Badge } from '@/components/ui/badge';
@@ -72,8 +73,43 @@ export default function Page() {
     (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
   );
 
+  /**
+   * Variants (バリアント) の仕組み:
+   * 1. 親(ul)に指定した initial/animate の名前（ラベル）は、自動的に子(li)に伝播する。
+   * 2. staggerChildren: 子要素を 0.1秒ずつずらして実行させる魔法のプロパティ。
+   * 3. 各項目の transition は子(itemVariants)側で制御する。
+   */
+  //1. 親要素のアニメーション
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1,
+      },
+    },
+  };
+
+  //2.子要素のアニメーション
+  const itemVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        duration: 0.5,
+      },
+    },
+  };
+  //END Framer motion Animation
+
   return (
-    <>
+    <motion.div
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.4 }}
+    >
+      <Header />
       <main className='flex flex-col items-center justify-center'>
         <div className='w-full max-w-sm mb-10 py-5'>
           {isLoading && (
@@ -90,16 +126,21 @@ export default function Page() {
             <p>投稿がまだありません</p>
           )}
           {!isLoading && !isError && allPosts.length > 0 && (
-            <ul className='grid gap-10 w-full max-w-sm'>
+            <motion.ul
+              className='grid gap-10 w-full max-w-sm'
+              variants={containerVariants}
+              initial='hidden'
+              animate='visible'
+            >
               {allPosts.map((post) => (
-                <li key={post.id}>
+                <motion.li key={post.id} variants={itemVariants}>
                   <div className='mb-2 flex justify-between items-center'>
                     {post.source === 'unsplash' ? (
                       <a
                         href={`${post.avatarLink}?${UTM}`}
                         target='_blank'
                         rel='noopener noreferrer'
-                        className='flex justify -between gap-2'
+                        className='flex justify-between items-center gap-2'
                       >
                         <Avatar>
                           <AvatarImage
@@ -111,7 +152,7 @@ export default function Page() {
                         <span className='text-sm'>{post.authorName}</span>
                       </a>
                     ) : (
-                      <div className='flex justify -between gap-2'>
+                      <div className='flex justify-between items-center gap-2'>
                         <Avatar>
                           <AvatarImage
                             src={post.avatarIcon}
@@ -137,7 +178,7 @@ export default function Page() {
                             {post.tag || 'Unsplash'}
                           </a>
                         ) : (
-                          <span className=''>{post.tag || 'Moments'}</span>
+                          <span className=''>{'Moments'}</span>
                         )}
                       </span>
                       {post.source === 'moments' && (
@@ -167,8 +208,19 @@ export default function Page() {
                     </a>
                     <CardHeader className='flex flex-col items-start gap-5'>
                       <CardTitle className='capitalize'>{post.title}</CardTitle>
-                      <CardDescription>
+                      <CardDescription className='flex flex-col items-start gap-1 w-full'>
                         {post.description || post.description}
+                        {/* ここに Read more */}
+                        {post.source === 'moments' && post.link_url && (
+                          <a
+                            href={post.link_url}
+                            target='_blank'
+                            rel='noopener noreferrer'
+                            className='block w-full text-right text-xs text-muted-foreground uppercase underline-offset-4 hover:text-foreground hover:underline'
+                          >
+                            Read more
+                          </a>
+                        )}
                       </CardDescription>
                       <CardAction>
                         {post.source === 'unsplash' ? (
@@ -203,10 +255,10 @@ export default function Page() {
                     </CardFooter>
                   </Card>
                   {/* <p>{photo.description || photo.alt_description}</p>
-              <p>By: {photo.user.name}</p> */}
-                </li>
+                <p>By: {photo.user.name}</p> */}
+                </motion.li>
               ))}
-            </ul>
+            </motion.ul>
           )}
           <div ref={unsplashRef} className='h-10 flex justify-center'>
             {isLoading && <PhotoSkeleton />}
@@ -214,6 +266,6 @@ export default function Page() {
         </div>
       </main>
       <Footer refetch={momentsRefetch} />
-    </>
+    </motion.div>
   );
 }
