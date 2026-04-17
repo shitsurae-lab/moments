@@ -1,3 +1,4 @@
+import axios from '@/lib/axios';
 import { EllipsisVertical } from 'lucide-react';
 import {
   AlertDialog,
@@ -18,22 +19,7 @@ type props = {
 
 export const DeletePostButton = ({ postId, onDelete }: props) => {
   const handleDelete = async () => {
-    const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
-    // await fetch(`${apiUrl}/api/posts/${postId}`, {
-    //   method: 'DELETE',
-    // });
-    // ✨️デバッグ強化版
-    const res = await fetch(`${apiUrl}/api/posts/${postId}`, {
-      method: 'DELETE',
-    });
-
-    console.log('status:', res.status);
-
-    const data = await res.json();
-    console.log('response:', data);
-
-    // ✨️END デバッグ強化版
-
+    await axios.delete(`/api/posts/${postId}`);
     onDelete();
   };
   return (
