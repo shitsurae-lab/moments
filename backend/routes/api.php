@@ -25,7 +25,7 @@ Route::middleware('auth:sanctum')->group(function () {
 //3. ログアウト
 Route::post('/logout', function (Request $request) {
     if ($request->user()) {
-        $request->user()->currentAccessToken()->delete();
+        $request->user()->currentAccessToken()->delete(); // ✅ トークンをDBから削除
     }
     return response()->json(['message' => 'ログアウト成功']);
-})->middleware('auth:sanctum');
+})->middleware('auth:sanctum'); // ✅ 認証済みユーザーのみ
