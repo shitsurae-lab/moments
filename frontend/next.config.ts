@@ -1,25 +1,26 @@
 import type { NextConfig } from 'next';
 
-const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+const backendUrl = process.env.BACKEND_URL || 'http://nginx:80'; // rewritesのdestination用（サーバーサイド）
+const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'; // CSP用（ブラウザ）
 
 const nextConfig: NextConfig = {
   async rewrites() {
     return [
       {
         source: '/api/:path*',
-        destination: `${apiUrl}/api/:path*`,
+        destination: `${backendUrl}/api/:path*`, // backendUrl
       },
       {
         source: '/sanctum/:path*',
-        destination: `${apiUrl}/sanctum/:path*`,
+        destination: `${backendUrl}/sanctum/:path*`, // backendUrl
       },
       {
         source: '/auth/login',
-        destination: `${apiUrl}/login`,
+        destination: `${backendUrl}/login`, // backendUrl
       },
       {
         source: '/auth/logout',
-        destination: `${apiUrl}/logout`,
+        destination: `${backendUrl}/logout`, // backendUrl
       },
     ];
   },
@@ -41,7 +42,6 @@ const nextConfig: NextConfig = {
               "img-src 'self' blob: data: https://images.unsplash.com https://pub-a8395051699348cd862cbff28dac1add.r2.dev",
               // APIリクエストの許可先
               `connect-src 'self' ${apiUrl} http://localhost:8000 http://localhost:3080 https://api.unsplash.com`,
-              "font-src 'self'",
               // フォントの許可
               "font-src 'self'",
               // このサイトにiframeを埋め込めなくされています
