@@ -14,6 +14,23 @@ export const metadata: Metadata = {
   title: 'Moments',
   description:
     '【Next.js 13 × Unsplash API】モダンな技術スタックで構築した、Instagramライクな写真共有アプリケーション',
+  openGraph: {
+    title: 'Moments',
+    description:
+      '【Next.js 13 × Unsplash API】モダンな技術スタックで構築した、Instagramライクな写真共有アプリケーション',
+    url: 'https://moments.vector-n.net/',
+    siteName: 'Moments',
+    images: [
+      {
+        url: 'https://moments.vector-n.net/',
+        width: 1200,
+        height: 630,
+        alt: 'Moments',
+      },
+    ],
+    locale: 'ja_JP',
+    type: 'website',
+  },
 };
 
 export default function RootLayout({
