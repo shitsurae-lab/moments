@@ -14,8 +14,8 @@ import { UserRound } from 'lucide-react';
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { UnifiedPost } from '@/lib/UnifiedPost';
-
-//フッターの読み込み
+//ヘッダー・フッターの読み込み
+import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
 //🌻 機能
 //機能1. カスタムフックを使用して写真を取得する

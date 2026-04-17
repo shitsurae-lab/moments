@@ -1,7 +1,6 @@
 import type { Metadata } from 'next';
 import localFont from 'next/font/local';
 import './globals.css';
-import { Header } from '@/components/Header';
 import { Suspense } from 'react';
 
 const noto = localFont({
@@ -25,10 +24,7 @@ export default function RootLayout({
   return (
     <html lang='ja' className={`${noto.variable}`}>
       <body>
-        <Suspense fallback={<div>Loading...</div>}>
-          <Header />
-          {children}
-        </Suspense>
+        <Suspense fallback={<div>Loading...</div>}>{children}</Suspense>
       </body>
     </html>
   );
