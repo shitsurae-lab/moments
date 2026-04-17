@@ -23,8 +23,8 @@ export const useMomentsGallery = () => {
         imageUrl: `${r2Url}/${post.image_path}`,
         title: post.title ?? '',
         description: post.caption,
-        authorName: 'Guest',
-        avatarIcon: '',
+        authorName: post.user_name,
+        avatarIcon: '/images/avatar.webp', //もしも、Userごとに画像を変化させるということであれば、php, dbの設定が前提になるがpost.user_icon_path ? `${r2Url}/${post.user_icon_path}` : '/images/avatar.webp'
         createdAt: post.created_at,
         source: 'moments' as const,
         postId: post.id,
