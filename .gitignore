@@ -12,3 +12,6 @@ docker-compose.override.yml
 # OS generated files
 .DS_Store
 Thumbs.db
+
+# プロジェクトのルート（直下）にある design（先頭に`/`をつける）
+/design/
