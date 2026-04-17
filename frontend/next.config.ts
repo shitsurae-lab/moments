@@ -1,23 +1,25 @@
 import type { NextConfig } from 'next';
 
+const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+
 const nextConfig: NextConfig = {
   async rewrites() {
     return [
       {
         source: '/api/:path*',
-        destination: 'http://nginx:80/api/:path*',
+        destination: `${apiUrl}/api/:path*`,
       },
       {
         source: '/sanctum/:path*',
-        destination: 'http://nginx:80/sanctum/:path*',
+        destination: `${apiUrl}/sanctum/:path*`,
       },
       {
         source: '/auth/login',
-        destination: 'http://nginx:80/login',
+        destination: `${apiUrl}/login`,
       },
       {
         source: '/auth/logout',
-        destination: 'http://nginx:80/logout',
+        destination: `${apiUrl}/logout`,
       },
     ];
   },
@@ -38,7 +40,8 @@ const nextConfig: NextConfig = {
               // 画像の許可ドメイン
               "img-src 'self' blob: data: https://images.unsplash.com https://pub-a8395051699348cd862cbff28dac1add.r2.dev",
               // APIリクエストの許可先
-              "connect-src 'self' http://localhost:8000 http://localhost:3080 https://api.unsplash.com",
+              `connect-src 'self' ${apiUrl} http://localhost:8000 http://localhost:3080 https://api.unsplash.com`,
+              "font-src 'self'",
               // フォントの許可
               "font-src 'self'",
               // このサイトにiframeを埋め込めなくされています
