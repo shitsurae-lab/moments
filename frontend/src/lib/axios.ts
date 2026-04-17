@@ -18,4 +18,18 @@ axiosInstance.interceptors.request.use((config) => {
   return config;
 });
 
+// レスポンス時にトークン有効期限切れを検知
+axiosInstance.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.response?.status === 401) {
+      // トークンをlocalStorageから削除
+      localStorage.removeItem('auth-token');
+      // ログインページにリダイレクト
+      window.location.href = '/login';
+    }
+    return Promise.reject(error);
+  },
+);
+
 export default axiosInstance;
