@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import axios from '@/lib/axios';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
 
@@ -36,17 +37,22 @@ export const PostForm = ({ onSuccess }: PostFormProps) => {
     formData.append('link_url', linkUrl);
 
     try {
-      const apiUrl = process.env.NEXT_PUBLIC_API_URL;
-      const response = await fetch(`${apiUrl}/api/posts`, {
-        method: 'POST',
-        body: formData,
+      // const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+      // const response = await fetch(`${apiUrl}/api/posts`, {
+      //   method: 'POST',
+      //   body: formData,
+      // });
+
+      // if (!response.ok) {
+      //   throw new Error('送信に失敗しました...');
+      // }
+
+      // const data = await response.json();
+      await axios.post('/api/posts', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
       });
-
-      if (!response.ok) {
-        throw new Error('送信に失敗しました...');
-      }
-
-      const data = await response.json();
       onSuccess();
     } catch (error) {
       console.error('Error uploading post:', error);
