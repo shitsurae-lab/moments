@@ -15,6 +15,7 @@ export const PostForm = ({ onSuccess }: PostFormProps) => {
   const [tags, setTags] = useState('');
   const [imageError, setImageError] = useState('');
   const [titleError, setTitleError] = useState('');
+  const [linkUrl, setLinkUrl] = useState('');
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -32,6 +33,7 @@ export const PostForm = ({ onSuccess }: PostFormProps) => {
     formData.append('title', title);
     formData.append('caption', caption);
     formData.append('tags', tags);
+    formData.append('link_url', linkUrl);
 
     try {
       const apiUrl = process.env.NEXT_PUBLIC_API_URL;
@@ -90,7 +92,9 @@ export const PostForm = ({ onSuccess }: PostFormProps) => {
       </div>
       {/* タグ */}
       <div className='mt-2'>
-        <label className='block text-sm font-medium mb-1'>タグを入力</label>
+        <label className='block text-sm font-medium mb-1'>
+          タグを入力（任意）
+        </label>
         <Input
           placeholder='横浜, 風景, 夕日'
           value={tags}
@@ -101,6 +105,18 @@ export const PostForm = ({ onSuccess }: PostFormProps) => {
               setTags(input);
             }
           }}
+        />
+      </div>
+      {/* リンク */}
+      <div className='mt-2'>
+        <label className='block text-sm font-medium mb-1'>
+          リンクURL（任意）
+        </label>
+        <Input
+          type='url'
+          placeholder='https://example.com'
+          value={linkUrl}
+          onChange={(e) => setLinkUrl(e.target.value)}
         />
       </div>
       <Button type='submit' className='mt-4'>

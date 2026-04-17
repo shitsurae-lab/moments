@@ -28,6 +28,8 @@ export const useMomentsGallery = () => {
         createdAt: post.created_at,
         source: 'moments' as const,
         postId: post.id,
+        tag: post.tags ?? 'moments',
+        link_url: post.link_url ?? undefined,
       }));
       setPosts(unified);
     } catch (error) {

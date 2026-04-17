@@ -34,9 +34,10 @@ class PostController extends Controller
         //1. バリデーション
         $request->validate([
             'image' => 'required|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
-            'title' => 'nullable|string|max:255',
-            'caption' => 'nullable|string|max:255',
+            'title' => 'required|string|max:255',
+            'caption' => 'required|string|max:255',
             'tags' => 'nullable|string',
+            'link_url' => 'nullable|url|max:255'
         ]);
 
         // 2. 画像をR2に保存
@@ -48,7 +49,8 @@ class PostController extends Controller
             'image_path' => $path,
             'title' => $request->title,
             'caption' => $request->caption,
-            'tags' => $request->tags,
+            'tags' => $request->tags ?? null,
+            'link_url' => $request->link_url ?? null,
             'user_name' => $request->user()->name,
             'user_avatar_url' => null,
         ]);
@@ -89,7 +91,7 @@ class PostController extends Controller
     public function destroy(Request $request, Post $post) //Requestを受け取れるように引数に追加
     {
         //1. 投稿者本人以外は削除できない
-        if ($post->use_id !== $request->user()->id) {
+        if ($post->user_id !== $request->user()->id) {
             return response()->json(['message' => 'Unauthorized'], 403);
         }
         // 2. image_pathがある場合のみR2から画像を削除

@@ -10,6 +10,7 @@ export interface MomentsPost {
   title: string | null;
   caption: string | null;
   tags: string | null;
+  link_url: string | null;
   user_name: string;
   user_avatar_url: string | null;
   created_at: string;

@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class Post extends Model
 {
     //保存可能な属性を指定する
-    protected $fillable = ['user_id', 'image_path', 'title', 'caption', 'tags', 'user_name', 'user_avatar_url'];
+    protected $fillable = ['user_id', 'image_path', 'title', 'caption', 'tags', 'link_url', 'user_name', 'user_avatar_url'];
 
     public function user(): BelongsTo
     {
