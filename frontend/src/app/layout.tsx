@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import localFont from 'next/font/local';
 import './globals.css';
 import { Suspense } from 'react';
+import { Loader2 } from 'lucide-react';
 
 const noto = localFont({
   src: './fonts/NotoSansJP-VariableFont_wght.woff2',
@@ -34,7 +35,15 @@ export default function RootLayout({
   return (
     <html lang='ja' className={`${noto.variable}`}>
       <body>
-        <Suspense fallback={<div>Loading...</div>}>{children}</Suspense>
+        <Suspense
+          fallback={
+            <div className='fixed inset-0 flex items-center justify-center bg-white'>
+              <Loader2 className='h-10 w-10 animate-spin text-gray-500' />
+            </div>
+          }
+        >
+          {children}
+        </Suspense>
       </body>
     </html>
   );
