@@ -55,6 +55,7 @@ export const OpeningAnimation = () => {
                 playsInline
                 onEnded={handleAnimationEnd}
                 // object-cover を使うと、指定した枠の中に綺麗に収まるよ
+                preload='auto'
                 className='absolute inset-0 w-full h-full object-cover'
               />
             </div>
