@@ -3,6 +3,7 @@ import localFont from 'next/font/local';
 import './globals.css';
 import { Suspense } from 'react';
 import { Loader2 } from 'lucide-react';
+import { OpeningAnimation } from '@/components/OpeningAnimation';
 
 const noto = localFont({
   src: './fonts/NotoSansJP-VariableFont_wght.woff2',
@@ -35,6 +36,7 @@ export default function RootLayout({
   return (
     <html lang='ja' className={`${noto.variable}`}>
       <body>
+        <OpeningAnimation />
         <Suspense
           fallback={
             <div className='fixed inset-0 flex items-center justify-center bg-white'>
