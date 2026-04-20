@@ -42,9 +42,12 @@ export const OpeningAnimation = () => {
               duration: 0.6,
               ease: easeOut,
             }}
-            className='fixed inset-0 z-100 grid place-items-center bg-white'
+            className='fixed inset-0 z-[100] flex items-center justify-center bg-white'
           >
-            <div className='relative w-full max-w-40 aspect-1248/1574'>
+            <div
+              className='relative w-full max-w-40 overflow-hidden'
+              style={{ aspectRatio: '1248/1574' }}
+            >
               <video
                 src='/videos/opening-moments-cropped.mp4'
                 autoPlay
@@ -52,7 +55,7 @@ export const OpeningAnimation = () => {
                 playsInline
                 onEnded={handleAnimationEnd}
                 // object-cover を使うと、指定した枠の中に綺麗に収まるよ
-                className='w-full h-full object-cover'
+                className='absolute inset-0 w-full h-full object-cover'
               />
             </div>
           </motion.div>
